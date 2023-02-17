@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="api.css" />
+    <script
+      src="https://kit.fontawesome.com/5d06b700fb.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Country</title>
+  </head>
+  <body>
+    <header>
+      <p class="w">Where in the world?</p>
+      <section>
+        <i class="fa-solid fa-moon"></i>
+        <div>Dark mode</div>
+      </section>
+    </header>
+    <br /><br />
+    <br />
+    <div class="flex">
+      <div class="ele1">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          id="myInput"
+          placeholder="search for a country.."
+          onmouseout="createConst()"
+          ondblclick="showData(createConst())"
+        />
+      </div>
+      <div class="ele2">
+        Filter By Region &nbsp &nbsp &nbsp &nbsp <button id="letterV">V</button>
+      </div>
+      <section id="myDiv" style="display: none">
+        <p>Africa</p>
+        <p>America</p>
+        <p>Asia</p>
+        <p>Europe</p>
+        <p>Oceania</p>
+      </section>
+      <footer></footer>
+    </div>
+
+    <script>
+      const letterV = document.getElementById("letterV");
+      const myDiv = document.getElementById("myDiv");
+
+      letterV.addEventListener("click", function () {
+        if (myDiv.style.display === "none") {
+          myDiv.style.display = "block";
+        } else {
+          myDiv.style.display = "none";
+        }
+      });
+      const data = [];
+      fetch("https://restcountries.com/v3.1/all")
+        .then((response) => response.json())
+        .then((data) => {
+          const newData = data.slice(0, 120);
+          newData.forEach((country) => {
+            const name = country.name.common;
+            const population = country.population;
+            const region = country.region;
+            const capital = country.capital;
+
+            const div = document.createElement("footer");
+            div.classList.add("country");
+            div.innerHTML = `Name: ${name}<br>Population: ${population}<br>Region: ${region}<br>Capital: ${capital} `;
+
+            document.body.appendChild(div);
+          });
+        });
+
+      //te5ou west linput
+      function createConst() {
+        const myConst = document.getElementById("myInput").value;
+        return myConst;
+      }
+      //search
+
+      function showData(inputValue) {
+        fetch("https://restcountries.com/v3.1/all")
+          .then((response) => response.json())
+          .then((data) => {
+            const filteredData = data.filter((item) =>
+              item.name.common.startsWith(inputValue)
+            );
+
+            const countries = filteredData.map((item) => item.name.common);
+
+            console.log(countries);
+          });
+      }
+    </script>
+  </body>
+</html>
